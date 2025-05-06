@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>User Subscriptions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #3A506B;
+      --secondary-color: #5BC0BE;
+      --accent-color: #0B132B;
+      --text-color: #1C2541;
+      --background-color: #F5F5F5;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .navbar-brand img {
+      width: 40px;
+      margin-right: 10px;
+    }
+
+    .content {
+      max-width: 1000px;
+      margin: 50px auto;
+      padding: 0 20px;
+      flex-grow: 1;
+    }
+
+    h1 {
+      color: var(--accent-color);
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .button:hover {
+      background-color: #4CA8A6;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    th {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 30px;
+      width: 90%;
+      max-width: 500px;
+      border-radius: 8px;
+      position: relative;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .close {
+      position: absolute;
+      right: 20px;
+      top: 15px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #aaa;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: #000;
+    }
+
+    form div {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    .back-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #2A405B;
+    }
+
+    .dropbtn {
+      background-color: var(--secondary-color);
+      color: white;
+      padding: 12px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      margin-right: 10px;
+    }
+
+    .dropbtn:hover, .dropbtn:focus {
+      background-color: #4CA8A6;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #f1f1f1;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+      z-index: 1;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {background-color: #ddd;}
+
+    .show {display:block;}
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <a href="#" class="navbar-brand">
+    <img src="https://cdn-icons-png.flaticon.com/512/2704/2704332.png" alt="Subscription Manager Icon">
+    Subscription Manager
+  </a>
+</nav>
+
+<div class="content">
+  <div th:if="${error}" class="alert alert-danger">
+    <p th:text="${error}"></p>
+  </div>
+  <div th:if="${success}" class="alert alert-success">
+    <p th:text="${success}"></p>
+  </div>
+
+  <h1 th:text="'Subscriptions for User ID: ' + ${userID}"></h1>
+
+  <div class="button-group">
+    <div class="dropdown">
+      <button onclick="toggleDropdown()" class="dropbtn">Filter by Category</button>
+      <div id="categoryDropdown" class="dropdown-content">
+        <a href="#" onclick="filterByCategory('all')">All</a>
+        <a href="#" onclick="filterByCategory('streaming')">Streaming</a>
+        <a href="#" onclick="filterByCategory('music')">Music</a>
+        <a href="#" onclick="filterByCategory('software')">Software</a>
+        <a href="#" onclick="filterByCategory('shopping')">Shopping</a>
+        <a href="#" onclick="filterByCategory('news')">News</a>
+      </div>
+    </div>
+    <button onclick="document.getElementById('addSubscriptionModal').style.display='block'" class="button">Add New Subscription</button>
+  </div>
+  <button onclick="document.getElementById('sortModal').style.display='block'" class="button">Sort</button>
+
+  <table>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Category</th>
+      <th>Price</th>
+      <th>Billing Cycle</th>
+      <th>Days until payment</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="subscriptie : ${subscriptii}">
+      <td th:text="${subscriptie.subscriptionID}"></td>
+      <td th:text="${subscriptie.name}"></td>
+      <td th:text="${subscriptie.category}"></td>
+      <td th:text="${subscriptie.price}"></td>
+      <td th:text="${subscriptie.startDate}"></td>
+      <td th:text="${subscriptie.getZilePanaLaUrmatoareaPlata()}"></td>
+      <td>
+        <button th:attr="data-id=${subscriptie.subscriptionID}, data-price=${subscriptie.price}, data-date=${subscriptie.startDate}"
+                onclick="openUpdateModal(this.getAttribute('data-id'), this.getAttribute('data-price'), this.getAttribute('data-date'))"
+                class="button">Update</button>
+        <button th:onclick="'openDeleteModal(' + ${subscriptie.subscriptionID} + ')'" class="button">Delete</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div id="addSubscriptionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('addSubscriptionModal').style.display='none'">&times;</span>
+      <h2>Add New Subscription</h2>
+      <div id="addSubscriptionErrorMessage" class="error-message"></div>
+      <form id="addSubscriptionForm" th:action="@{/web/subscriptions/adaugareSubscriptie/{userId}(userId=${userID})}" method="post">
+        <input type="hidden" name="userId" th:value="${userID}">
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+          <label for="category">Category:</label>
+          <input type="text" id="category" name="category" required>
+        </div>
+        <div>
+          <label for="price">Price:</label>
+          <input type="number" id="price" name="price" step="0.01" required>
+        </div>
+        <div>
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" name="startDate" required>
+        </div>
+        <button type="submit" class="button">Add Subscription</button>
+      </form>
+    </div>
+  </div>
+  <div id="updateSubscriptionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="document.getElementById('updateSubscriptionModal').style.display='none'">&times;</span>
+      <h2>Update Subscription</h2>
+      <form id="updateSubscriptionForm" th:action="@{/web/subscriptions/update/user/{userId}(userId=${userID})}" method="post">
+        <div id="updateSubscriptionErrorMessage" class="error-message"></div>
+        <input type="hidden" id="updateSubscriptionId" name="subscriptionID">
+        <div>
+          <label for="updatePrice">Price:</label>
+          <input type="number" id="updatePrice" name="price" step="0.01" required>
+        </div>
+        <div>
+          <label for="updateStartDate">Billing Cycle Date:</label>
+          <input type="date" id="updateStartDate" name="startDate" required>
+        </div>
+        <button type="submit" class="button">Update Subscription</button>
+      </form>
+    </div>
+  </div>
+</div>
+<div id="sortModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="document.getElementById('sortModal').style.display='none'">&times;</span>
+    <h2>Sort Options</h2>
+    <div>
+      <h3>Sort by Price:</h3>
+      <button onclick="sortSubscriptions('price', 'asc')" class="button">Ascending</button>
+      <button onclick="sortSubscriptions('price', 'desc')" class="button">Descending</button>
+    </div>
+    <div>
+      <h3>Sort by Billing Date:</h3>
+      <button onclick="sortSubscriptions('startDate', 'asc')" class="button">Ascending</button>
+      <button onclick="sortSubscriptions('startDate', 'desc')" class="button">Descending</button>
+    </div>
+  </div>
+</div>
+<div id="deleteConfirmationModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Delete Subscription</h2>
+    <p>Are you sure you want to delete the subscriptie?</p>
+    <div>
+      <input type="checkbox" id="confirmDeletion" required>
+      <label for="confirmDeletion">Confirm deletion</label>
+    </div>
+    <div style="display: flex; gap: 10px; justify-content: center; margin-top: 20px;">
+      <button onclick="confirmDelete()" class="button">Delete</button>
+      <button onclick="closeDeleteModal()" class="button">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+<a th:href="@{/web/profile}" class="back-button">Back to Profile</a>
+<script>
+function sortSubscriptions(sortBy, sortDir) {
+  const userId = [[${userID}]];
+  window.location.href = `/web/subscriptions/user/${userId}?sortBy=${sortBy}&sortDir=${sortDir}`;
+}
+</script>
+<script>
+function openUpdateModal(subscriptionId, price, startDate) {
+  document.getElementById('updateSubscriptionId').value = subscriptionId;
+  document.getElementById('updatePrice').value = price;
+  document.getElementById('updateStartDate').value = formatDate(startDate);
+  document.getElementById('updateSubscriptionModal').style.display = 'block';
+}
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0];
+}
+
+document.getElementById('updateSubscriptionForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const formData = new FormData(this);
+
+  fetch(this.action, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (response.ok) {
+      document.getElementById('updateSubscriptionModal').style.display = 'none';
+      window.location.reload();
+    } else {
+      return response.text().then(text => { throw new Error(text) });
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('An error occurred while updating the subscription');
+  });
+});
+</script>
+<script>
+    function toggleDropdown() {
+      document.getElementById("categoryDropdown").classList.toggle("show");
+    }
+
+    function filterByCategory(category) {
+      const userId = [[${userID}]];
+      window.location.href = `/web/subscriptions/user/${userId}/category/${category}`;
+    }
+
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        for (var i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+      if (event.target.className === 'modal') {
+        event.target.style.display = 'none';
+      }
+    }
+
+  </script>
+<script>
+  document.getElementById('addSubscriptionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch(this.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        }
+        return response.text();
+    })
+    .then(() => {
+        // Succes
+        window.location.reload();
+    })
+    .catch(error => {
+        // Afișează mesajul de eroare în modal
+        document.getElementById('addSubscriptionErrorMessage').textContent = error.message;
+    });
+});
+
+</script>
+<script>
+  document.getElementById('updateSubscriptionForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    fetch(this.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                throw new Error(text);
+            });
+        }
+        return response.text();
+    })
+    .then(() => {
+        // Succes
+        window.location.reload();
+    })
+    .catch(error => {
+        // Afișează mesajul de eroare în modal
+        document.getElementById('updateSubscriptionErrorMessage').textContent = error.message;
+    });
+});
+
+</script>
+<script>
+  let subscriptionToDelete = null;
+const deleteModal = document.getElementById("deleteConfirmationModal");
+
+function openDeleteModal(subscriptionId) {
+    subscriptionToDelete = subscriptionId;
+    deleteModal.style.display = "block";
+    document.getElementById('confirmDeletion').checked = false;
+}
+
+function closeDeleteModal() {
+    deleteModal.style.display = "none";
+    subscriptionToDelete = null;
+}
+
+function confirmDelete() {
+    if (document.getElementById('confirmDeletion').checked) {
+        const userID = document.querySelector('[name="userId"]').value;
+        window.location.href = `/web/subscriptions/stergereSubscriptie/${subscriptionToDelete}/user/${userID}`;
+    } else {
+        alert('Please confirm the deletion by checking the box');
+    }
+}
+
+// Event listener pentru închiderea modalului când se face click pe X
+document.querySelector('#deleteConfirmationModal .close').onclick = function() {
+    closeDeleteModal();
+}
+
+// Event listener pentru închiderea modalului când se face click în afara lui
+window.onclick = function(event) {
+    if (event.target == deleteModal) {
+        closeDeleteModal();
+    }
+}
+
+
+</script>
+</body>
+</html>

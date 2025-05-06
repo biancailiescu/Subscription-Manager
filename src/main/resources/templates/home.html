@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Subscription Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+    :root {
+      --primary-color: #3A506B;
+      --secondary-color: #5BC0BE;
+      --accent-color: #0B132B;
+      --text-color: #1C2541;
+      --background-color: #F5F5F5;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 0;
+      color: var(--text-color);
+    }
+
+    .navbar {
+      background-color: var(--primary-color);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      color: white;
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .navbar-brand img {
+      width: 40px;
+      margin-right: 10px;
+    }
+
+    .navbar-button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .navbar-button:hover {
+      background-color: #4CA8A6;
+    }
+
+    .content {
+      max-width: 800px;
+      margin: 50px auto;
+      text-align: center;
+      padding: 0 20px;
+    }
+
+    h1 {
+      color: var(--accent-color);
+      font-size: 36px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+    }
+
+    .features {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 50px;
+    }
+
+    .feature {
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      width: 30%;
+    }
+
+    .feature h3 {
+      color: var(--primary-color);
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+<nav class="navbar">
+    <a href="#" class="navbar-brand">
+        <img src="https://cdn-icons-png.flaticon.com/512/2704/2704332.png" alt="Subscription Manager Icon">
+        Subscription Manager
+    </a>
+    <a th:href="@{/web/profile}" class="navbar-button">My Profile</a>
+</nav>
+
+<div class="content">
+    <h1>Welcome to Subscription Manager</h1>
+    <p>Effortlessly manage all your subscriptions in one place. Stay organized, save money, and never miss a payment.</p>
+
+    <div class="features">
+        <div class="feature">
+            <h3>Track Expenses</h3>
+            <p>Monitor your monthly spending on subscriptions.</p>
+        </div>
+        <div class="feature">
+            <h3>Reminders</h3>
+            <p>Get notified before payments are due.</p>
+        </div>
+        <div class="feature">
+            <h3>Analytics</h3>
+            <p>Visualize your subscriptions habits over time.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
